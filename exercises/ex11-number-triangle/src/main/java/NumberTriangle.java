@@ -5,12 +5,12 @@ import java.nio.file.Path;
 
 /**
  * Exercise (Chapter: APIs, JSON, and Files) — reading data from a file into objects.
- *
+ * <p>
  * This exercise practises reading data from a file and building a structure of
  * objects to represent it. You will complete two methods:
  * {@link #loadTriangle(String)} and {@link #retrieve(String)}.
  * Edit only this file.
- *
+ * <p>
  * A {@code NumberTriangle} is like a tree, but some nodes in the structure have
  * two parents. The structure is shown below. Observe that the parents of e are b
  * and c, whereas d and f each only have one parent. Each row is complete and will
@@ -23,15 +23,15 @@ import java.nio.file.Path;
  *              d   e   f
  *            h   i   j   k
  * </pre>
- *
+ * <p>
  * The sharing of nodes between rows is the interesting part: if {@code base} refers
  * to the topmost object, then {@code base.left.right == base.right.left} — they are
  * the very same object (aliasing), not two equal copies.
- *
+ * <p>
  * This class is minimally defined and is only intended to be constructed using the
  * {@link #loadTriangle(String)} method. There is no code enforcing the structure
  * described above, and you do not have to write any either.
- *
+ * <p>
  * Relevant reading: the file-reading section of the "APIs, JSON, and Files" chapter.
  */
 public class NumberTriangle {
@@ -90,9 +90,9 @@ public class NumberTriangle {
    * Follows path through this NumberTriangle structure ('l' = left; 'r' = right) and
    * returns the root value at the end of the path. An empty string returns the root
    * of this NumberTriangle.
-   *
+   * <p>
    * You can decide if you want to use a recursive or an iterative approach.
-   *
+   * <p>
    * You can assume that:
    * <ul>
    *   <li>the length of path is less than the height of this NumberTriangle structure;</li>
@@ -109,16 +109,25 @@ public class NumberTriangle {
     //       value of wherever you ended up. An empty path means "stay here".
     //       Hint: String#charAt(int) and String#length() are all you need for the
     //       iterative version; a recursive version can use String#substring(1).
-    return 0;
+
+    if (path.isEmpty()) {
+      return root;
+    }
+
+    if (path.charAt(0) == 'l') {
+      return left.retrieve(path.substring(1));
+    } else {
+      return right.retrieve(path.substring(1));
+    }
   }
 
   /**
    * Reads in the NumberTriangle structure from a file.
-   *
+   * <p>
    * You may assume that it is a valid format with a height of at least 1, so there
    * is at least one line with a number on it to start the file. Numbers on a line
    * are separated by spaces. See {@code input_tree.txt} for an example.
-   *
+   * <p>
    * The first row is the root of the NumberTriangle (call it 0).
    * The second line contains the two children of the root (call them 1L and 1R).
    * The third line contains the three numbers corresponding to:
@@ -139,19 +148,19 @@ public class NumberTriangle {
    *         /  \  /  \
    *       2LL  2LR*  2RR    *2LR == 2RL
    * </pre>
-   *
+   * <p>
    * Hint 0: Start by making a plan and scaffolding what you plan to do. If you are
    *         still finding it hard to "think in Java", write some comments describing
    *         what you want to do first.
-   *
+   * <p>
    * Hint 1: Think about what you need to keep track of on each iteration of the loop
    *         and make appropriate variables to store those things. Working through
    *         {@code little_tree.txt} by hand should help you develop the general logic.
-   *
+   * <p>
    * Hint 2: Related to Hint 1, think about how to connect NumberTriangle objects
    *         between adjacent rows in the structure. Remember that the row you just
    *         built becomes the children of the row before it.
-   *
+   * <p>
    * Hint 3: If you are still stuck, look for a subproblem that you can solve, then
    *         design the logic of your solution around a helper method that you
    *         implement separately. Decomposing a problem this way makes it much more
@@ -167,26 +176,33 @@ public class NumberTriangle {
     // of the "APIs, JSON, and Files" chapter.
     BufferedReader br = Files.newBufferedReader(Path.of(fname));
 
+
     // TODO: define any variables that you want to use to keep track of things
     //       between iterations of the loop below (for example, the row of
     //       NumberTriangle objects that you built on the previous iteration).
 
     // We need to return the top of the NumberTriangle, so here is a variable for it.
     NumberTriangle top = null;
+    NumberTriangle[] previousRow = null;
 
     String line = br.readLine();
     while (line != null) {
+      String[] numbers = line.split(" ");
+      NumberTriangle[] current = new NumberTriangle[numbers.length];
 
-      // Remove this line when you are done; it is here so that the starter code
-      // prints the contents of the file when you run it.
-      System.out.println(line);
+      for(int i=0; i < numbers.length; i++) {
+        current[i] = new NumberTriangle(Integer.parseInt(numbers[i]));
+      }
 
-      // TODO: process the line. Splitting it on spaces gives you the numbers in
-      //       this row; make a NumberTriangle for each one, then wire this row up
-      //       as the children of the previous row. Remember the aliasing: the
-      //       right child of one node is the left child of the next node over.
-
-      // read the next line
+      if (previousRow == null) {
+        top = current[0];
+      } else {
+        for(int i=0; i< previousRow.length; i++) {
+          previousRow[i].setLeft(current[i]);
+          previousRow[i].setRight(current[i + 1]);
+        }
+      }
+      previousRow =current;
       line = br.readLine();
     }
     br.close();

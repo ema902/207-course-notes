@@ -34,12 +34,12 @@ interface Borrowable {
 + addHold(hold: Hold) : void
 }
 
-class Book extends Item implements Borrowable {
+class Book {
 - borrowTime : int = 21
 
 }
 
-class DVD extends Item implements Borrowable {
+class DVD  {
 - borrowTime: int = 7
 
 
@@ -49,11 +49,11 @@ abstract class Person{
 - name: String
 + getName() : String
 }
-class Librarian extends Person {
+class Librarian  {
 + addItem(item: Item) : Item
 + waiveFee(member: Member) : void
 }
-class Member extends Person {
+class Member {
 - memberNumber: String
 - lateFee : double
 +login(memberNumber: String) : boolean
@@ -66,7 +66,7 @@ class Hold {
 + Hold(member: Member, item: Borrowable)
 }
 
-class ReferenceItem extends Item{
+class ReferenceItem {
 
 }
 
@@ -74,6 +74,16 @@ class Catalogue {
     + addItem(item : Item) : void
     + findItem(number : String) : Item
 }
+
+Item <|-- Book
+Item <|-- DVD
+Item <|-- ReferenceItem
+
+Borrowable <|.. Book
+Borrowable <|.. DVD
+
+Person <|-- Librarian
+Person <|-- Member
 
 Librarian ..> Member
 Librarian ..> Catalogue
