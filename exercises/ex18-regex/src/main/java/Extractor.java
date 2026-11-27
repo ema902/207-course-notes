@@ -70,6 +70,10 @@ public class Extractor {
     List<String> results = new ArrayList<>();
     // TODO: get a Matcher for text from COURSE_CODE, then loop with find(),
     //       adding matcher.group() to results each time.
+    Matcher matchers = COURSE_CODE.matcher(text);
+    while (matchers.find()){
+      results.add(matchers.group());
+    }
     return results;
   }
 
@@ -85,6 +89,10 @@ public class Extractor {
     List<String> results = new ArrayList<>();
     // TODO: same loop as above, but add matcher.group(1) — the text captured by
     //       the parenthesised (\d{3}) group — instead of the whole match.
+    Matcher matchers = COURSE_CODE.matcher(text);
+    while (matchers.find()){
+      results.add(matchers.group(1));
+    }
     return results;
   }
 
@@ -98,6 +106,7 @@ public class Extractor {
    */
   public static String maskEmails(String text) {
     // TODO: get a Matcher for text from EMAIL and return matcher.replaceAll(MASK).
-    return text;
+    Matcher matcher = EMAIL.matcher(text);
+    return matcher.replaceAll(MASK);
   }
 }

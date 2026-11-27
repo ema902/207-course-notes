@@ -49,7 +49,7 @@ exercises inline.
 | [ex03-alias-side-effects](ex03-alias-side-effects/src/main/java/Aliasing.java) | 1. Introduction to Java | references vs. primitives, side effects | tests |
 | [ex04-digit-sum](ex04-digit-sum/src/main/java/DigitSum.java) | 1. Introduction to Java | `while` loops, integer arithmetic | tests |
 | [ex05-cleanup](ex05-cleanup/src/main/java/Rectangle.java) | Code Style and Documentation | CheckStyle, JavaDoc | CheckStyle (see note below) |
-| [ex06-overloading](ex06-overloading/src/main/java/MyHashing.java) | 2. Classes in Java | overloading, constructors, static methods | tests |
+| [ex06-overloading](ex06-overloading/src/main/src/MyHashing.java) | 2. Classes in Java | overloading, constructors, static methods | tests |
 | [ex07-equality](ex07-equality/src/main/java/Point.java) | 2. Classes in Java | `toString`, `equals`, `hashCode` | tests |
 | [ex08-comparable](ex08-comparable/src/main/java/Word.java) | 2. Classes in Java | `Comparable` / `compareTo` | tests |
 | [ex09-instance-counter](ex09-instance-counter/src/main/java/Robot.java) | 2. Classes in Java | static vs. instance fields | tests |

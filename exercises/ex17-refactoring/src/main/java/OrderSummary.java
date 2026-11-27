@@ -55,46 +55,85 @@ public class OrderSummary {
    * @param itemPrices the price of each item, in the same order as {@code itemNames}
    * @return the formatted summary, with lines separated by {@code \n}
    */
+  private static final double TAX_RATE = 0.13;
+  private static final double DISCOUNT_THRESHOLD = 200.0;
+  private static final double DISCOUNT_RATE = 0.10;
+  private static final double PREMIUM_THRESHOLD = 100.0;
+  
   public static String summarize(String customer, String[] itemNames, double[] itemPrices) {
-    // TODO (Slide Statements, 13.6): these three declarations are a long way from
-    //      the code that first uses them. Slide each one down to its first use.
-    double subtotal = 0.0;
-    int premiumCount = 0;
-    double discount = 0.0;
 
-    // TODO (Split Loop, 13.5): this single loop does two unrelated jobs —
-    //      accumulating the subtotal and counting premium items. Split it into
-    //      two loops, then consider Extract Method (13.2) on each one.
-    for (int i = 0; i < itemPrices.length; i++) {
-      subtotal += itemPrices[i];
-      if (itemPrices[i] >= 100.0) {
-        premiumCount++;
-      }
-    }
+    double subtotal = calculateSubtotal(itemPrices);
+
+    int premiumCount = getPremiumCount(itemPrices);
 
     // TODO: replace the magic numbers below with named constants.
-    if (subtotal > 200.0) {
-      discount = subtotal * 0.10;
-    }
-    double taxable = subtotal - discount;
-    double tax = taxable * 0.13;
-    double total = taxable + tax;
+    Result result = getResult(subtotal);
 
     // TODO (Extract Method, 13.2): everything from here down is one job —
     //      formatting the report. Pull it out into its own well-named method
     //      (and the per-item line into a second one).
+    return getString(customer, itemNames, itemPrices, premiumCount, subtotal, result);
+  }
+
+  private static String getString(String customer, String[] itemNames, double[] itemPrices, int premiumCount, double subtotal, Result result) {
     StringBuilder report = new StringBuilder();
     report.append("Order summary for ").append(customer).append("\n");
     report.append("----------------------\n");
     for (int i = 0; i < itemNames.length; i++) {
-      report.append(String.format(Locale.US, "%s: $%.2f\n", itemNames[i], itemPrices[i]));
+      report.append(formatItemLine(itemNames[i], itemPrices[i]));
     }
     report.append(String.format(Locale.US, "Items: %d\n", itemNames.length));
     report.append(String.format(Locale.US, "Premium items: %d\n", premiumCount));
     report.append(String.format(Locale.US, "Subtotal: $%.2f\n", subtotal));
-    report.append(String.format(Locale.US, "Discount: $%.2f\n", discount));
-    report.append(String.format(Locale.US, "Tax: $%.2f\n", tax));
-    report.append(String.format(Locale.US, "Total: $%.2f", total));
+    report.append(String.format(Locale.US, "Discount: $%.2f\n", result.discount));
+    report.append(String.format(Locale.US, "Tax: $%.2f\n", result.tax));
+    report.append(String.format(Locale.US, "Total: $%.2f", result.total));
     return report.toString();
+  }
+
+  private static int getPremiumCount(double[] itemPrices) {
+    int premiumCount = 0;
+    for (double itemPrice : itemPrices) {
+        if (itemPrice >= PREMIUM_THRESHOLD) {
+            premiumCount++;
+        }
+    }
+    return premiumCount;
+  }
+
+  private static Result getResult(double subtotal) {
+    double discount = 0.0;
+    if (subtotal > DISCOUNT_THRESHOLD) {
+      discount = subtotal * DISCOUNT_RATE;
+    }
+    double taxable = subtotal - discount;
+    double tax = taxable * TAX_RATE;
+    double total = taxable + tax;
+    Result result = new Result(discount, tax, total);
+    return result;
+  }
+
+  private static class Result {
+    public final double discount;
+    public final double tax;
+    public final double total;
+
+    public Result(double discount, double tax, double total) {
+      this.discount = discount;
+      this.tax = tax;
+      this.total = total;
+    }
+  }
+
+  private static double calculateSubtotal(double[] itemPrices) {
+    double subtotal = 0.0;
+
+    for (int i = 0; i < itemPrices.length; i++) {
+      subtotal += itemPrices[i];
+    }
+    return subtotal;
+  }
+  private static String formatItemLine(String name, double price) {
+    return String.format(Locale.US, "%s: $%.2f\n", name, price);
   }
 }

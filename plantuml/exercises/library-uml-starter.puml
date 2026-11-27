@@ -27,8 +27,61 @@ abstract class Item {
   + getCatalogueNumber() : String
 }
 
+interface Borrowable {
++ borrow(member: Member) : void
++ getLoanPeriod() : int
++ isCurrentlyLoaned() : boolean
++ addHold(hold: Hold) : void
+}
+
+class Book extends Item implements Borrowable {
+- borrowTime : int = 21
+
+}
+
+class DVD extends Item implements Borrowable {
+- borrowTime: int = 7
+
+
+}
+
+abstract class Person{
+- name: String
++ getName() : String
+}
+class Librarian extends Person {
++ addItem(item: Item) : Item
++ waiveFee(member: Member) : void
+}
+class Member extends Person {
+- memberNumber: String
+- lateFee : double
++login(memberNumber: String) : boolean
++ placeHold(item: Borrowable) : boolean
++ clearLateFee() : void
+
+}
+
+class Hold {
++ Hold(member: Member, item: Borrowable)
+}
+
+class ReferenceItem extends Item{
+
+}
+
+class Catalogue {
+    + addItem(item : Item) : void
+    + findItem(number : String) : Item
+}
+
+Librarian ..> Member
+Librarian ..> Catalogue
+
+
 ' TODO: add boxes for Book and DVD. What differs between them — a whole class,
 '       or just the value of a loan-period field?
+
 
 ' TODO: reference-only items cannot be borrowed at all. Decide how to say that
 '       in the diagram: a subclass, or an interface (e.g. "Borrowable") that

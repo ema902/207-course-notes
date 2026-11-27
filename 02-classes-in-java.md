@@ -323,9 +323,9 @@ the one-time step of enabling the `exercises` profile in IntelliJ.
 
 - **Exercise 6 — Overloading** (overloaded constructors and methods, static
   methods). Complete
-  [MyHashing.java](exercises/ex06-overloading/src/main/java/MyHashing.java) so the
+  [MyHashing.java](exercises/ex06-overloading/src/main/src/MyHashing.java) so the
   two constructors and the three `hash` overloads behave as documented, then run
-  [MyHashingTest.java](exercises/ex06-overloading/src/test/java/MyHashingTest.java).
+  [MyHashingTest.java](exercises/ex06-overloading/src/test/src/MyHashingTest.java).
 - **Exercise 7 — Equality** (`toString`, `equals`, `hashCode`). Override the three
   methods in [Point.java](exercises/ex07-equality/src/main/java/Point.java) so two
   points with the same coordinates are equal, then run
